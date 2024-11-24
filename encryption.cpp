@@ -1,22 +1,32 @@
 #include<iostream>
 using namespace std;
+//header Menus
+void mainHeader(); 
+void numberConversionheader();
+void encryptionHeader();
+//functions
 int power(int x, int y);
+string decimalToString(int num);
+//<------Number system--------------->
 string decimalToBase(int num, int conversionBase);
 int baseToDecimal(int num, int base);
 int hexaToDecimal(string hexNum);
-void numberConversionheader();
-void mainHeader();
-void encryptionHeader();
 void numberConversionsystem(char choice,int &num,string &hexNum);
-string encryption(string str);
-string decimalToString(int num);
+//<-----------Encryption and decryption system----------------->
+void encryption(string str, int ascii[],int size); //for encryption
+string decryption(string encryptedStr); //for decryption
+//for encryption and decryption specific base system
+void encryptionSystem(char choice, int ascii[],int size);
+
 int main(){
     char choice;
     int num;
+    string decrypted ="";
     string hexNum;
+    int size = 100; //size of array
+    int ascii[size] = {0};
     do{
         mainHeader();
-        cout<<encryption("Hi")<<endl;
         cout<<"\n\nSelect your desired option : ";
         cin>>choice;
         switch (choice){
@@ -25,7 +35,7 @@ int main(){
                 break;
             }
             case '2':{ //Encryption & Decryption
-                /* code */
+                encryptionSystem(choice,ascii,size);
                 break;
             }
             case '0':{ //exit
@@ -96,19 +106,140 @@ void numberConversionsystem(char choice,int &num,string &hexNum){
     }while(choice!='0');
 }
 //<--------------------Encryption function-------------------->
-string encryption(string str){
+void encryptionSystem(char choice, int ascii[],int size){
+    string str;
+    int encryptSystem = 0;
+    do{
+        encryptionHeader();
+        cout<<"Select the desired option : ";
+        cin>>choice;
+        switch(choice){
+            case '1':{ //binary
+                cout<<"\nChoose the number system in which you wanna encrypt your message : \n";
+                cout<<"1. Binary   2. Octal   3. Decimal  4. Hexadecimal"<<endl;
+                cout<<"Enter : ";
+                cin>>encryptSystem;
+                 cout<<"\nEnter the string you want to encrypt : ";
+                 cin.ignore();
+                getline(cin,str);
+                encryption(str,ascii,size); //encrption in ascii decimal & stores in ascii array
+                if(encryptSystem == 1){ //binary
+                    cout<<"\nEncrypted message in binary : "<<endl;
+                    for(int i=0; i<size; i++){
+                        if(ascii[i]!=0){
+                            cout<<decimalToBase(ascii[i],2)<<" ";
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                }
+                else if(encryptSystem == 2){ //octal
+                    cout<<"\nEncrypted message in octal : "<<endl;
+                    for(int i=0; i<size; i++){
+                        if(ascii[i]!=0){
+                            cout<<decimalToBase(ascii[i],8)<<" ";
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                }
+                else if(encryptSystem == 3){
+                    cout<<"\nEncrypted message in decimal ascii : "<<endl;
+                    for(int i=0; i<size; i++){
+                        if(ascii[i]!=0){
+                            cout<<ascii[i]<<" ";
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                }
+                else if(encryptSystem == 4){ //hexadecimal
+                    cout<<"\nEncrypted message in Hexadecimal : "<<endl;
+                    for(int i=0; i<size; i++){
+                        if(ascii[i]!=0){
+                            cout<<decimalToBase(ascii[i],16)<<" ";
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                }
+                else{
+                    cout<<"Invalid choice!\n";
+                }
+                cout<<endl<<endl;
+                system("pause");
+                break;
+            }
+            case '2':{ 
+                cout<<"\nChoose the number system for your pre-encrypted message : \n";
+                cout<<"1. Binary   2. Octal   3. Decimal  4. Hexadecimal"<<endl;
+                cout<<"Enter : ";
+                cin>>encryptSystem;
+                cout<<"Enter the string you want to decrypt : ";
+                cin.ignore();
+                getline(cin,str);
+                if(encryptSystem == 1){ //binary
+                    cout<<"\nDecrypted message : "<<endl;
+                    for(int i=0; i<size; i++){
+                        if(ascii[i]!=0){
+                            cout<<decimalToBase(ascii[i],2)<<" ";
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                }
+                else if(encryptSystem == 2){ //octal
+                    cout<<"\nDecrypted message : "<<endl;
+                    
+                }
+                else if(encryptSystem == 3){ //decimal
+                    cout<<"\nDecrypted message : "<<endl;
+                            cout<<decryption(str)<<endl;
+                }
+                else if(encryptSystem == 4){ //hexadecimal
+                    cout<<"\nDecrypted message : "<<endl;
+                    
+                }
+                else{
+                    cout<<"Invalid choice!\n";
+                }
+                cout<<endl<<endl;
+                system("pause");
+                break;
+            }
+            case '0':{
+                break;
+            }
+            default:{
+                cout<<"Invalid choice!"<<endl;
+                system("pause");
+            }
+        }
+    }while(choice!='0');
+}
+void encryption(string str, int ascii[],int size){
     string encryptStr = "";
-    int ascii;
     for(int i=0; i<str.length(); i++){
         if(str[i]>='A' && str[i]<='Z'){
-            ascii = str[i] - 'A'  + 65; //converts into decimal acsii
+            ascii[i] = str[i] - 'A'  + 65; //converts into decimal acsii
         }
         else if(str[i]>='a' && str[i]<='z'){
-            ascii = str[i] - 'a'  + 97; //converts into decimal acsii
+            ascii[i] = str[i] - 'a'  + 97; //converts into decimal acsii
         }
-        encryptStr += decimalToString(ascii) + " ";
+        // encryptStr += decimalToString(ascii) + " ";
+        else if(str[i]==' '){
+            ascii[i] = 32;
+        }
+        else if(str[i]=='.'){
+            ascii[i] = 46;
+        }
     }
-    return encryptStr;
+    // return encryptStr;
 }
 string decimalToString(int num) {
     string result = "";
@@ -119,6 +250,41 @@ string decimalToString(int num) {
     }
     return result;
 }
+string decryption(string encryptedStr) {
+    string decrypted = "";
+    string temp = "";
+
+    for(int i = 0; i < encryptedStr.length(); i++){
+        if (encryptedStr[i] != ' ') {
+            temp += encryptedStr[i]; //extrat 1st value
+        }else {
+            if (temp != "") {
+                int ascii = 0;
+
+                // convert to int ascii
+                for (int j = 0; j < temp.length(); j++){
+                    ascii = ascii * 10 + (temp[j] - '0');
+                }
+
+                // Convert the ASCII to char
+                decrypted += static_cast<char>(ascii);
+                temp = ""; 
+            }
+        }
+    }
+
+    // Handle last digit
+    if(temp != ""){
+    int ascii = 0;
+        for (int j = 0; j < temp.length(); j++){
+            ascii = ascii * 10 + (temp[j] - '0');
+        }
+        decrypted += static_cast<char>(ascii);
+    }
+
+    return decrypted;
+}
+
 //<-----------------number system conversion-------------------------->
 //decimal to bin, oct and hex
 string decimalToBase(int num, int conversionBase){
@@ -139,7 +305,7 @@ string decimalToBase(int num, int conversionBase){
     }
     return result;
 }
-//any base to decimal except hex
+// any base to decimal except hex
 int baseToDecimal(int num, int base){
     int result = 0, i = 0, lastDigit = 0;
     if(num == 0) //if user enter 0
